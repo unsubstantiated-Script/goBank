@@ -1,0 +1,1 @@
+This is a simple banking app written in Go
