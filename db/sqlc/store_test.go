@@ -24,7 +24,9 @@ func TestTransferTx(t *testing.T) {
 
 	for i := 0; i < n; i++ {
 		go func() {
-			result, err := store.TransferTx(context.Background(), TransferTxParams{
+			//Passing this info in to build context and provide test info.
+			ctx := context.Background()
+			result, err := store.TransferTx(ctx, TransferTxParams{
 				FromAccountID: account1.ID,
 				ToAccountID:   account2.ID,
 				Amount:        amount,
@@ -97,10 +99,10 @@ func TestTransferTx(t *testing.T) {
 	}
 
 	// check final updated balance
-	updatedAccount1, err := testQueries.GetAccount(context.Background(), account1.ID)
+	updatedAccount1, err := store.GetAccount(context.Background(), account1.ID)
 	require.NoError(t, err)
 
-	updatedAccount2, err := testQueries.GetAccount(context.Background(), account2.ID)
+	updatedAccount2, err := store.GetAccount(context.Background(), account2.ID)
 	require.NoError(t, err)
 
 	fmt.Println(">> after:", updatedAccount1.Balance, updatedAccount2.Balance)
