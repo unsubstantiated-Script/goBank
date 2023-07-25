@@ -19,7 +19,7 @@ func (server *Server) createAccount(ctx *gin.Context) {
 
 	//Handling bad data responses
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorReponse(err))
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
 
