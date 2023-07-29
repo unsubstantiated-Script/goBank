@@ -21,23 +21,28 @@ Serialization Anomaly: the result of a group of concurrent committed transaction
 4. Serializable: Can achieve same result if execute transactions serially in some order instead of concurrently.
 */
 
-// Store provides all functions to execute db queries and transactions
-// Embedding Queries here allows store to have access to all the Queries methods and such
-type Store struct {
-	//Composition here over inheritance.
-	*Queries
-	db *sql.DB
+type Store interface {
+	Querier
+	TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error)
 }
 
-func NewStore(db *sql.DB) *Store {
-	return &Store{
+// SQLStore provides all functions to execute SQL db queries and transactions
+// Embedding Queries here allows store to have access to all the Queries methods and such
+type SQLStore struct {
+	//Composition here over inheritance.
+	db *sql.DB
+	*Queries
+}
+
+func NewStore(db *sql.DB) Store {
+	return &SQLStore{
 		db:      db,
 		Queries: New(db),
 	}
 }
 
 // execTx executes a function within a database transaction not exported to keep it safe, exported in the function below
-func (store *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
+func (store *SQLStore) execTx(ctx context.Context, fn func(*Queries) error) error {
 	tx, err := store.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -74,9 +79,9 @@ type TransferTxResult struct {
 	ToEntry     Entry    `json:"to_entry"`
 }
 
-// This method performs a money transfer from one account to another
+// TransferTx This method performs a money transfer from one account to another
 // It creates a transfer record, add account entries, and updates accounts' balance within a single DB transaction
-func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
+func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
 
 	var result TransferTxResult
 
