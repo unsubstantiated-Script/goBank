@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	_ "github.com/golang/mock/mockgen/model"
 	_ "github.com/lib/pq"
 	"goBank/api"
 	db "goBank/db/sqlc"
