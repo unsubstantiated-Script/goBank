@@ -28,8 +28,16 @@ func (maker *PasetoMaker) CreateToken(username string, duration time.Duration) (
 		return "", err
 	}
 	// add data to the token.
-	token.Set("id", tokenID.String())
-	token.Set("username", username)
+	err = token.Set("id", tokenID.String())
+	if err != nil {
+		return "", err
+	}
+
+	err = token.Set("username", username)
+	if err != nil {
+		return "", err
+	}
+
 	token.SetIssuedAt(time.Now())
 	token.SetExpiration(time.Now().Add(duration))
 	return token.V4Encrypt(maker.symmetricKey, maker.implicit), nil
