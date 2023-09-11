@@ -25,10 +25,11 @@ jobs:
         id: install
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: ${{ secrets.OIDC_ROLE }}
-          aws-region: us-west-2
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: eu-west-1
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -56,3 +57,4 @@ jobs:
           kubectl apply -f eks/service.yml
           kubectl apply -f eks/issuer.yml
           kubectl apply -f eks/ingress.yml
+#derp
