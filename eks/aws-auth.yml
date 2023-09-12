@@ -9,3 +9,7 @@ data:
       username: github-ci
       groups:
         - system:masters
+    - userarn: arn:aws:iam::831574738468:role/github-actions-role
+          username: github-actions-role
+          groups:
+            - system:masters
