@@ -50,6 +50,7 @@ func (server *Server) setupRouter() {
 	// add routes to router
 	router.POST("/users", server.createUser)
 	router.POST("/users/login", server.loginUser)
+	router.POST("/tokens/renew_access", server.renewAccessToken)
 
 	//Protecting a group of routes with middleware
 	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
