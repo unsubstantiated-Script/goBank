@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
+	"github.com/jackc/pgx/v5"
 	"github.com/lib/pq"
 	"github.com/stretchr/testify/require"
 	mockdb "goBank/db/mock"
@@ -193,7 +194,7 @@ func TestCreateUserAPI(t *testing.T) {
 
 func TestLoginUserAPI(t *testing.T) {
 	user, password := randomUser(t)
-
+	fmt.Println(pgx.ErrNoRows)
 	testCases := []struct {
 		name          string
 		body          gin.H
@@ -229,7 +230,7 @@ func TestLoginUserAPI(t *testing.T) {
 		//		store.EXPECT().
 		//			GetUser(gomock.Any(), gomock.Any()).
 		//			Times(1).
-		//			Return(db.User{}, pgx.ErrNoRows)
+		//			Return(db.User{}, errors.New("sql: no rows in result set"))
 		//	},
 		//	checkResponse: func(recorder *httptest.ResponseRecorder) {
 		//		require.Equal(t, http.StatusNotFound, recorder.Code)
