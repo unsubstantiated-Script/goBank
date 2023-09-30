@@ -30,6 +30,8 @@ func (server *Server) renewAccessToken(ctx *gin.Context) {
 		return
 	}
 
+	fmt.Println(refreshPayload)
+
 	session, err := server.store.GetSession(ctx, refreshPayload.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
