@@ -147,4 +147,6 @@
     ```
 
 
-### Project is currently wired up to the gRPC API. Fire it up with "make server" and "make evans" in the terminal.
+### Project is currently wired up to the gRPC API and an HTTP API. 
+- Fire it up with `make server` and `make evans` in the terminal. Run `package pb` and `service SimpleBank` in the Evans CLI
+- Test HTTP in PostMan
