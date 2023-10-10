@@ -145,3 +145,6 @@
     ```bash
     kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.4.0/cert-manager.yaml
     ```
+
+
+### Project is currently wired up to the gRPC API. Fire it up with "make server" and "make evans" in the terminal.
