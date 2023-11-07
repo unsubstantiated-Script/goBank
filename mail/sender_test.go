@@ -7,6 +7,9 @@ import (
 )
 
 func TestSendEmailWithGmail(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
 	//'..' refers to root directory as the path
 	config, err := util.LoadConfig("..")
 	require.NoError(t, err)
