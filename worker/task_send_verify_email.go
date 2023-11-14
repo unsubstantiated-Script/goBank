@@ -53,9 +53,6 @@ func (processor *RedisTaskProcessor) ProcessTaskSendVerifyEmail(ctx context.Cont
 
 	user, err := processor.store.GetUser(ctx, payload.Username)
 	if err != nil {
-		//if err == sql.ErrNoRows {
-		//	return fmt.Errorf("user doesn't exist: %w", asynq.SkipRetry)
-		//}
 		return fmt.Errorf("failed to get user: %w", err)
 	}
 
@@ -64,31 +61,26 @@ func (processor *RedisTaskProcessor) ProcessTaskSendVerifyEmail(ctx context.Cont
 		Email:      user.Email,
 		SecretCode: util.RandomString(32),
 	})
-
 	if err != nil {
 		return fmt.Errorf("failed to create verify email: %w", err)
 	}
 
 	subject := "Welcome to Simple Bank"
-	verifyUrl := fmt.Sprintf("http://simple-bank.org/verify_email?id=?%d&secret_code=%s", verifyEmail.ID, verifyEmail.SecretCode)
-	content := fmt.Sprintf(`
-	Hello %s, <br/>
-	Thank you for registering with us! <br/>
+	// TODO: replace this URL with an environment variable that points to a front-end page
+	verifyUrl := fmt.Sprintf("http://localhost:8080/v1/verify_email?email_id=%d&secret_code=%s",
+		verifyEmail.ID, verifyEmail.SecretCode)
+	content := fmt.Sprintf(`Hello %s,<br/>
+	Thank you for registering with us!<br/>
 	Please <a href="%s">click here</a> to verify your email address.<br/>
 	`, user.FullName, verifyUrl)
 	to := []string{user.Email}
 
 	err = processor.mailer.SendEmail(subject, content, to, nil, nil, nil)
-
 	if err != nil {
-		return fmt.Errorf("failed ot send verify email: %w", err)
+		return fmt.Errorf("failed to send verify email: %w", err)
 	}
 
-	log.Info().
-		Str("type", task.Type()).
-		Bytes("payload", task.Payload()).
-		Str("email", user.Email).
-		Msg("processed task")
-
+	log.Info().Str("type", task.Type()).Bytes("payload", task.Payload()).
+		Str("email", user.Email).Msg("processed task")
 	return nil
 }
