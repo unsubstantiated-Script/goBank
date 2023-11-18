@@ -1,6 +1,9 @@
 package db
 
-import "github.com/jackc/pgx/v5/pgconn"
+import (
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
+)
 
 const (
 	ForeignKeyViolation = "23503"
@@ -10,3 +13,5 @@ const (
 var ErrUniqueViolation = &pgconn.PgError{
 	Code: UniqueViolation,
 }
+
+var ErrRecordNotFound = pgx.ErrNoRows
