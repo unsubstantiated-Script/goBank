@@ -44,10 +44,11 @@ server:
 
 mock:
 	 mockgen -package mockdb -destination db/mock/store.go goBank/db/sqlc Store
+	 mockgen -package mockwk -destination worker/mock/distributor.go goBank/worker TaskDistributor
 
 proto:
 	rm -f pb/*.go
-	rm -f doc/swagger/*.swagger.json
+	rm -f doc/swagger/*.swagger.jsonm
 	protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative \
 	--go-grpc_out=pb --go-grpc_opt=paths=source_relative \
 	--grpc-gateway_out=pb --grpc-gateway_opt=paths=source_relative \
