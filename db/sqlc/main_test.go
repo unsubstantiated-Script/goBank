@@ -1,8 +1,9 @@
 package db
 
 import (
+	"context"
 	"database/sql"
-	_ "github.com/lib/pq"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"goBank/util"
 	"log"
 	"os"
@@ -16,7 +17,7 @@ Isolation: Concurrent transactions do not affect each other.
 Durability: Data written by a successful transaction must be recorded in persistent storage.
 */
 
-var testQueries *Queries
+var testStore Store
 
 var testDB *sql.DB
 
@@ -26,13 +27,13 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatal("can't load config:", err)
 	}
-	testDB, err = sql.Open(config.DBDriver, config.DBSource)
+	connPool, err := pgxpool.New(context.Background(), config.DBSource)
 
 	if err != nil {
 		log.Fatal("Can't connect to DB!")
 	}
 
-	testQueries = New(testDB)
+	testStore = NewStore(connPool)
 
 	os.Exit(m.Run())
 }
