@@ -4,7 +4,6 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/lib/pq"
 	db "goBank/db/sqlc"
 	"goBank/util"
 	"net/http"
@@ -62,13 +61,9 @@ func (server *Server) createUser(ctx *gin.Context) {
 
 	if err != nil {
 
-		if pqErr, ok := err.(*pq.Error); ok {
-			switch pqErr.Code.Name() {
-			case "unique_violation":
-				ctx.JSON(http.StatusForbidden, errorResponse(err))
-				return
-			}
-
+		if db.ErrorCode(err) == db.UniqueViolation {
+			ctx.JSON(http.StatusForbidden, errorResponse(err))
+			return
 		}
 
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
