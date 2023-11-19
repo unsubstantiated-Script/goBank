@@ -53,8 +53,10 @@
 #        run: |
 #          kubectl config current-context
 #          kubectl apply -f eks/aws-auth.yml
-#          kubectl rollout restart -f eks/deployment.yml
+#          kubectl apply -f eks/deployment.yml
 #          kubectl apply -f eks/service.yml
 #          kubectl apply -f eks/issuer.yml
 #          kubectl apply -f eks/ingress-nginx.yml
+#          kubectl apply -f eks/ingress-http.yml
+#          kubectl apply -f eks/ingress-grpc.yml
 ##derp
